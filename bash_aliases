@@ -1,4 +1,11 @@
 
+docker-layer-print-usage ()
+{
+  echo "Usage: docker-layer layer base-container [...]" >&2
+  echo "env vars:" >&2
+  echo "  SUFFIX - suffix to override tag with." >&2
+}
+
 docker-layer ()
 {
   SCRIPT_DIR=$(dirname $(realpath $0))
@@ -8,30 +15,30 @@ docker-layer ()
   if [ -z $LAYER ]
   then
     echo "ERROR: Please specify layer. Exiting." >&2
-    echo "Usage: docker-layer layer base-container" >&2
+    docker-layer-print-usage   
     return 1
   fi
 
   if [ -z $BASE ]
   then
     echo "ERROR: Please specify base container. Exiting." >&2
-    echo "Usage: docker-layer layer base-container" >&2
+    docker-layer-print-usage   
     return 2
   fi
 
   if ! [ -f $SCRIPT_DIR/$LAYER.Dockerfile ]
   then
     echo "ERROR: Couldn't find '$LAYER.Dockerfile'. Exiting." >&2
-    echo "Usage: docker-layer layer base-container" >&2
+    docker-layer-print-usage   
     return 3
   fi
 
   # TODO: docker build(s) happen in the script run below. No source.
   if [ -f $SCRIPT_DIR/$LAYER.Dockerfile.sh ]
   then
-    $SCRIPT_DIR/$LAYER.Dockerfile.sh ${@:3}
+    echo "FATAL ERROR: Couldn't find '$LAYER.Dockerfile.sh'. Exiting." >&2
+    return 4
   fi
 
-  # TODO: no build comand here. Only in the scripts.
-  docker build -t ${BASE}_nvim${TAG_SUFFIX} --target nvim_ide $EXTRA_DOCKER_RUN_ARGS -f $SCRIPT_DIR/$LAYER.Dockerfile --build-arg from=$BASE $SCRIPT_DIR
+  $SCRIPT_DIR/$LAYER.Dockerfile.sh ${@:2}
 }
