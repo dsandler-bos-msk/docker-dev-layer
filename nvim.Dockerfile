@@ -21,7 +21,7 @@ RUN cd /home && \
     make -j$(nproc) install && \
     cd /home && rm -rf /home/neovim
 
-FROM ${from} as nvim_ide
+FROM ${from} as nvim_ide_base
 
 ARG INTERMEDIATE_INSTALL_PREFIX
 ARG INSTALL_PREFIX
@@ -33,7 +33,7 @@ COPY --from=nvim_builder ${INTERMEDIATE_INSTALL_PREFIX} ${INSTALL_PREFIX}
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    curl ca-certificates && \
+    curl ca-certificates git ca-certificates yarn && \
     curl -sL install-node.vercel.app/lts > lts && chmod +x lts && \
     ./lts -y --platform=$(uname -s | tr '[:upper:]' '[:lower:]') && rm lts && \
     curl -fLo /root/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/${VIMPLUG_VERSION}/plug.vim && \
@@ -42,16 +42,22 @@ RUN apt-get update && \
     apt-get clean -y --no-install-recommends && \
     apt-get autoclean -y --no-install-recommends
 
+FROM ${from} as nvim_ide_cpp
+
 # TODO: Split away yarn, git, and ca-certificates. clangd and bear belongs in C layer with ${from} build-arg.
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    clangd git ca-certificates yarn bear && \
+    clangd bear && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean -y --no-install-recommends && \
     apt-get autoclean -y --no-install-recommends
 
+FROM ${from} as nvim_ide_rust
+
 # TODO: Add a rust layer with ${from} build-arg
+
+FROM ${from} as nvim_ide_final
 
 # This should be last tier with ${from} build-arg.
 
