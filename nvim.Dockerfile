@@ -52,6 +52,7 @@ RUN apt-get update && \
 FROM ${from} as nvim_ide_rust
 
 # TODO: Add a rust layer with ${from} build-arg
+RUN echo rust > /rust.txt
 
 FROM ${from} as nvim_ide_final
 
