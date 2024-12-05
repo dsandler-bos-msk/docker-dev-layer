@@ -41,33 +41,3 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean -y --no-install-recommends && \
     apt-get autoclean -y --no-install-recommends
-
-FROM ${from} as nvim_ide_cpp
-USER root
-
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    clangd bear && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean -y --no-install-recommends && \
-    apt-get autoclean -y --no-install-recommends
-
-FROM ${from} as nvim_ide_rust
-USER root
-
-# TODO: Add a rust layer with ${from} build-arg
-RUN echo rust > /rust.txt
-
-FROM ${from} as nvim_ide_final
-USER root
-
-RUN mkdir -p /root/.config/nvim
-
-COPY .vimrc /root/.config/nvim/init.vim
-COPY coc-settings.json /root/.config/nvim/
-
-RUN  echo "call plug#begin()" >> /root/.config/nvim/init.vim && \
-     echo "Plug 'neoclide/coc.nvim', {'branch': 'release'}" >> /root/.config/nvim/init.vim && \
-     echo "call plug#end()" >> /root/.config/nvim/init.vim
-
-RUN  nvim -c ":PlugInstall" "+:qa"
