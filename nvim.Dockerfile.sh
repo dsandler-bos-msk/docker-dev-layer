@@ -26,11 +26,12 @@ if [ -z $2 ]
 then
   echo "ERROR: Need at least one language target. Exiting." >&2
   print_usage
+  exit 2
 fi
 
 RUNNING_TAG=$( echo "$BASE_IMAGE" | sha1sum | grep -o ^[a-f0-9]* )
 
-docker build -t $RUNNING_TAG --target nvim_ide_base -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$BASE_IMAGE
+docker build --network=host -t $RUNNING_TAG --target nvim_ide_base -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$BASE_IMAGE $SCRIPT_DIR
 
 COC_SETTINGS_JSON='{"languageserver":{}}'
 
@@ -45,12 +46,12 @@ do
   if ! [ -f $COC_LANG_JSON ]
   then
     echo "FATAL ERROR: Missing CoC file '$COC_LANG_JSON'. Exiting." >&2
-    exit 2
+    exit 3
   fi
   COC_SETTINGS_JSON=$(echo $COC_SETTINGS_JSON | jq --argfile lang $COC_LANG_JSON '.languageserver += $lang')
 
   ## build language layer with FROM=running-name. 
-  docker build -t $RUNNING_TAG_NEXT --target nvim_ide_$LANG_TARGET -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$RUNNING_TAG
+  docker build --network=host -t $RUNNING_TAG_NEXT --target nvim_ide_$LANG_TARGET -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$RUNNING_TAG $SCRIPT_DIR
 
   RUNNING_TAG=$RUNNING_TAG_NEXT
 done
@@ -63,6 +64,6 @@ fi
 
 echo $COC_SETTINGS_JSON | jq . > coc-settings.json
 
-docker build -t ${BASE_IMAGE}${SUFFIX} --target nvim_ide_final -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$RUNNING_TAG
+docker build --network=host -t ${BASE_IMAGE}${SUFFIX} --target nvim_ide_final -f $SCRIPT_DIR/nvim.Dockerfile --build-arg from=$RUNNING_TAG $SCRIPT_DIR
 
 rm coc-settings.json

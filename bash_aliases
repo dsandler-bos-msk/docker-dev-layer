@@ -34,7 +34,7 @@ docker-layer ()
   fi
 
   # TODO: docker build(s) happen in the script run below. No source.
-  if [ -f $SCRIPT_DIR/$LAYER.Dockerfile.sh ]
+  if ! [ -f $SCRIPT_DIR/$LAYER.Dockerfile.sh ]
   then
     echo "FATAL ERROR: Couldn't find '$LAYER.Dockerfile.sh'. Exiting." >&2
     return 4
