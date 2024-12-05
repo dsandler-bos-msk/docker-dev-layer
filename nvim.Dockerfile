@@ -29,8 +29,6 @@ ENV VIMPLUG_VERSION=0.11.0
 
 COPY --from=nvim_builder ${INTERMEDIATE_INSTALL_PREFIX} ${INSTALL_PREFIX}
 
-# TODO: merge with below layer yarn only
-
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl ca-certificates git ca-certificates yarn && \
@@ -44,8 +42,6 @@ RUN apt-get update && \
 
 FROM ${from} as nvim_ide_cpp
 
-# TODO: Split away yarn, git, and ca-certificates. clangd and bear belongs in C layer with ${from} build-arg.
-
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     clangd bear && \
@@ -58,8 +54,6 @@ FROM ${from} as nvim_ide_rust
 # TODO: Add a rust layer with ${from} build-arg
 
 FROM ${from} as nvim_ide_final
-
-# This should be last tier with ${from} build-arg.
 
 RUN mkdir -p /root/.config/nvim
 
