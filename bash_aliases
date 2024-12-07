@@ -26,13 +26,6 @@ docker-layer ()
     return 2
   fi
 
-  if ! [ -f $SCRIPT_DIR/$LAYER.Dockerfile ]
-  then
-    echo "ERROR: Couldn't find '$LAYER.Dockerfile'. Exiting." >&2
-    docker-layer-print-usage   
-    return 3
-  fi
-
   # TODO: docker build(s) happen in the script run below. No source.
   if ! [ -f $SCRIPT_DIR/$LAYER.Dockerfile.sh ]
   then
