@@ -68,8 +68,8 @@ then
   SUFFIX=_nvim
 fi
 
-echo $COC_SETTINGS_JSON | jq . > coc-settings.json
+echo $COC_SETTINGS_JSON | jq . > $SCRIPT_DIR/coc-settings.json
 
 docker build --network=host -t ${BASE_IMAGE}${SUFFIX} --target nvim_ide_final -f $SCRIPT_DIR/nvim.final.Dockerfile --build-arg from=$RUNNING_TAG $SCRIPT_DIR
 
-rm coc-settings.json
+rm $SCRIPT_DIR/coc-settings.json
