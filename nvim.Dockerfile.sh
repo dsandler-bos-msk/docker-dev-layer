@@ -48,7 +48,7 @@ do
 
   ## add matching arg to language layer and add to coc-settings.json 
   ## TODO
-  COC_LANG_JSON=nvim.coc.lang.${LANG_TARGET}.json
+  COC_LANG_JSON=$SCRIPT_DIR/nvim.coc.lang.${LANG_TARGET}.json
   if ! [ -f $COC_LANG_JSON ]
   then
     echo "FATAL ERROR: Missing CoC file '$COC_LANG_JSON'. Exiting." >&2
