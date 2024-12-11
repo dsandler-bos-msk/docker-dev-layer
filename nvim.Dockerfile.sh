@@ -15,9 +15,9 @@ then
   exit 1
 fi
 
-if ! [ -f .vimrc ]
+if ! [ -f $SCRIPT_DIR/.vimrc ]
 then
-  echo "ERROR: Missing .vimrc file. Please places yours (or just make an empty .vimrc file if you don't have one)." >&2
+  echo "ERROR: Missing $SCRIPT_DIR/.vimrc file. Please places yours (or just make an empty .$SCRIPT_DIR/vimrc file if you don't have one)." >&2
   exit 2
 fi
 
