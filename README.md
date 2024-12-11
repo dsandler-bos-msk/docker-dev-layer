@@ -1,4 +1,4 @@
-## Running
+## Preparing
 
 Add the `docker-layer` command to you shell by entering the following command while in the directory of this repo:
 
