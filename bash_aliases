@@ -10,7 +10,6 @@ _DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR=$(dirname $(realpath $BASH_SOURCE))
 
 docker-layer ()
 {
-  echo $_DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR
   LAYER=$1
   BASE=$2
 
