@@ -6,9 +6,11 @@ docker-layer-print-usage ()
   echo "  SUFFIX - suffix to override tag with." >&2
 }
 
+_DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR=$(dirname $(realpath $BASH_SOURCE))
+
 docker-layer ()
 {
-  SCRIPT_DIR=$(dirname $(realpath $0))
+  echo $_DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR
   LAYER=$1
   BASE=$2
 
@@ -27,11 +29,11 @@ docker-layer ()
   fi
 
   # TODO: docker build(s) happen in the script run below. No source.
-  if ! [ -f $SCRIPT_DIR/$LAYER.Dockerfile.sh ]
+  if ! [ -f $_DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR/$LAYER.Dockerfile.sh ]
   then
     echo "FATAL ERROR: Couldn't find '$LAYER.Dockerfile.sh'. Exiting." >&2
     return 4
   fi
 
-  $SCRIPT_DIR/$LAYER.Dockerfile.sh ${@:2}
+  $_DOCKER_DEV_LAYER_BASH_ALIASES_SCRIPT_DIR/$LAYER.Dockerfile.sh ${@:2}
 }
