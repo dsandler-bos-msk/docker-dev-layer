@@ -17,7 +17,7 @@ ARG INTERMEDIATE_INSTALL_PREFIX
 ARG INSTALL_PREFIX
 
 RUN cd /home && \
-    git clone --branch=v0.9.4 --depth 1 https://github.com/neovim/neovim && cd neovim && \
+    git clone --branch=v0.11.2 --depth 1 https://github.com/neovim/neovim && cd neovim && \
     make -j$(nproc) CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_GENERATOR="Unix Makefiles" CMAKE_INSTALL_PREFIX=${INTERMEDIATE_INSTALL_PREFIX} && \
     make -j$(nproc) CMAKE_GENERATOR="Unix Makefiles" install && \
     cd /home && rm -rf /home/neovim
@@ -27,7 +27,7 @@ USER root
 
 ARG INTERMEDIATE_INSTALL_PREFIX
 ARG INSTALL_PREFIX
-ENV VIMPLUG_VERSION=0.11.0
+ENV VIMPLUG_VERSION=0.14.0
 
 COPY --from=nvim_builder ${INTERMEDIATE_INSTALL_PREFIX} ${INSTALL_PREFIX}
 
