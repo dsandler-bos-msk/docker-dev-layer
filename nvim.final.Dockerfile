@@ -11,5 +11,8 @@ COPY coc-settings.json /root/.config/nvim/
 RUN  echo "call plug#begin()" >> /root/.config/nvim/init.vim && \
      echo "Plug 'neoclide/coc.nvim', {'branch': 'release'}" >> /root/.config/nvim/init.vim && \
      echo "call plug#end()" >> /root/.config/nvim/init.vim
+     echo "colorscheme vim" >> /root/.config/nvim/init.vim && \
+     echo "set notermguicolors" >> /root/.config/nvim/init.vim
+
 
 RUN  nvim -c ":PlugInstall" "+:qa"
