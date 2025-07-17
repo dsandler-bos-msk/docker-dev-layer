@@ -18,8 +18,8 @@ ARG INSTALL_PREFIX
 
 RUN cd /home && \
     git clone --branch=v0.11.2 --depth 1 https://github.com/neovim/neovim && cd neovim && \
-    make -j$(nproc) CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_GENERATOR="Unix Makefiles" CMAKE_INSTALL_PREFIX=${INTERMEDIATE_INSTALL_PREFIX} && \
-    make -j$(nproc) CMAKE_GENERATOR="Unix Makefiles" install && \
+    make -j$(nproc) CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_GENERATOR="Unix\ Makefiles" CMAKE_INSTALL_PREFIX=${INTERMEDIATE_INSTALL_PREFIX} && \
+    make -j$(nproc) CMAKE_GENERATOR="Unix\ Makefiles" install && \
     cd /home && rm -rf /home/neovim
 
 FROM ${from} as nvim_ide_base
